@@ -1,9 +1,10 @@
 library(dplyr)
 
-download_data <- function(url = 
-           "https://www.ndbc.noaa.gov/view_text_file.php?filename=amrl1h2011.txt.gz&dir=data/historical/stdmet/",
-           select_date = T){
-  ### new url1
+download_data <- function(
+  url = "https://www.ndbc.noaa.gov/view_text_file.php?filename=amrl1h2011.txt.gz&dir=data/historical/stdmet/",
+  select_date = T){
+  ### url---str, the link you want to pull your data from
+  ### select_date--T/F, turn on to select the date when hurricane Lee occured
   suppressMessages(  ###  This stops the annoying messages on your screen.
     file3 <- read_table(url3, col_names = TRUE)
   )
