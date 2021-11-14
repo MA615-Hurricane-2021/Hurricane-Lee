@@ -6,7 +6,7 @@ download_data <- function(
   ### url---str, the link you want to pull your data from
   ### select_date--T/F, turn on to select the date when hurricane Lee occured
   suppressMessages(  ###  This stops the annoying messages on your screen.
-    file3 <- read_table(url3, col_names = TRUE)
+    file3 <- read_table(url, col_names = TRUE)
   )
   if (select_date) {
     data_new <-  file3 %>% filter(MM == "09" & (DD =="06" | DD =="05" | DD =="04" | DD =="03" | DD =="02") )   
@@ -18,5 +18,5 @@ download_data <- function(
   
 }
 # demo
-# df1 <- download_data()
+df1 <- download_data()
 #
