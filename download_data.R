@@ -1,4 +1,5 @@
 library(dplyr)
+library(readr)
 
 download_data <- function(
   url = "https://www.ndbc.noaa.gov/view_text_file.php?filename=amrl1h2011.txt.gz&dir=data/historical/stdmet/",
