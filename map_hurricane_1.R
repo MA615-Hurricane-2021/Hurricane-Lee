@@ -4,8 +4,11 @@ library(tidyverse)
 library(stats)
 
 
+#-------------------------------------------------------------------------------------------------------------
+# Use hurricanexposuredata package to do visualizations.
+
 addRepo("geanders")
-install.packages("hurricaneexposuredata")
+# install.packages("hurricaneexposuredata")
 
 library(hurricaneexposuredata)
 
@@ -38,3 +41,17 @@ tornado <- map_event_exposure(storm = "Lee-2011", event_type = "tornado")
 
 map_tracks(storms = "Lee-2011", plot_object = tornado, plot_points = TRUE, 
            color = "darkgray")
+
+hur1 <- hurr_tracks %>% 
+  filter(storm_id == "Lee-2011")
+
+
+# data("wind_storms")
+data("storm_winds")
+head(storm_winds)
+storm_winds %>% 
+  filter(storm_id == "Lee-2011")
+
+
+
+
