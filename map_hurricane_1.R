@@ -5,7 +5,7 @@ library(stats)
 
 
 addRepo("geanders")
-install.packages("hurricaneexposuredata")
+#install.packages("hurricaneexposuredata")
 
 library(hurricaneexposuredata)
 
