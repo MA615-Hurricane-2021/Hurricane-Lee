@@ -1,17 +1,18 @@
-install.packages("gstat")
+#install.packages("gstat")
 library(gstat)  
-install.packages("fields")
+#install.packages("fields")
 library(fields)
-install.packages("sp")
+#install.packages("sp")
 library(sp)
 library(magrittr)
 library(lubridate)
+library(dplyr)
 source("map_hurricane_1.R")
-
+source("bouy_plot.R")
 
 lee <- hurr_tracks %>% filter(hurr_tracks$storm_id == "Lee-2011")
 
-lee$date <- ymd_hm(lee$date)
+#lee$date <- ymd_hm(lee$date)
 
 
 df1<-df1%>%
@@ -26,11 +27,10 @@ df1.2<- df1%>%
             ATMP=mean(as.numeric(ATMP)),WTMP=mean(as.numeric(WTMP)),
             DEWP=mean(as.numeric(DEWP)),VIS=mean(as.numeric(VIS)),
             TIDE=mean(as.numeric(TIDE)))
-
-
+df1.3<- df1.2[1:20,]
   for (i in 0:19){
-    a<-filter(df1.2[1+6*i,])
-    df1.3[i+1,]<-a
+    df1.3.1<-filter(df1.2[1+6*i,])
+    df1.3[i+1,]<-df1.3.1
   }
 
 lee1.3<- lee
@@ -42,3 +42,4 @@ sixhours<- inner_join(lee1.3,df1.3,by="date")
 
 vgram<-vgram(loc=cbind(sixhours$latitude,sixhours$longitude),y=sixhours$WDIR)
 plot(vgram)
+ 
