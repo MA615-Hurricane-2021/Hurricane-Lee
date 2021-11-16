@@ -8,7 +8,8 @@ library(stats)
 # Use hurricanexposuredata package to do visualizations.
 
 addRepo("geanders")
-# install.packages("hurricaneexposuredata")
+
+#install.packages("hurricaneexposuredata")
 
 library(hurricaneexposuredata)
 
