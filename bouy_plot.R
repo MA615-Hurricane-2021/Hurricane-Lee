@@ -12,6 +12,8 @@ bouyCbind <- function(){
     unite("Date", "MM": "DD", sep = "-") %>%
     unite("Time", "hh":"mm", sep = ":") %>% 
     unite("DT", "Date":"Time", sep = " ")
+
+
   data_update <- data_update[,-c(6,7,8,9,13,14,15)] # select the column we use for next function
   data_update[,3:8] <- apply(data_update[,3:8], 2, as.numeric)
 }

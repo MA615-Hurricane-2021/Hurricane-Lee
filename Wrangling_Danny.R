@@ -181,7 +181,7 @@ a
 
 a
 
-a1 <- a %>% 
+buoy_by_six <- a %>% 
   group_by(DD, g) %>% 
   summarise(WSPD_avg_six = mean(WSPD_avg), 
             GST_avg_six = mean(GST_avg),
@@ -189,7 +189,7 @@ a1 <- a %>%
             PRES_avg_six = mean(PRES_avg))
 
 
-a1
+buoy_by_six
 
 
 # b_list[1]
