@@ -6,7 +6,7 @@ library(rlang)
 
 # source the function from download_data.R and combine the column
 bouyCbind <- function(){
-  # source("download_data.R")
+  source("download_data.R") #if you cannot source this file, open the file and run download_data() only!!!!
   df1 <- download_data()
   data_update <- df1 %>% 
     unite("Date", "MM": "DD", sep = "-") %>%
