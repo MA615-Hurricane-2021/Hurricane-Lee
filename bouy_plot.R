@@ -11,6 +11,7 @@ bouyCbind <- function(){
     unite("Time", "hh":"mm", sep = ":") %>% 
     unite("DT", "Date":"Time", sep = " ")
   data_update <- data_update[,-c(6,7,8,9,13,14,15)]
+
 }
 
 
@@ -32,5 +33,3 @@ bouyData <- function(input){
 
 # Demo
 # bouyData(WSPD)
-
-
