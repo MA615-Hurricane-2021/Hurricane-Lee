@@ -13,17 +13,17 @@ bouyCbind <- function(){
     unite("Time", "hh":"mm", sep = ":") %>% 
     unite("DT", "Date":"Time", sep = " ")
   data_update <- data_update[,-c(6,7,8,9,13,14,15)] # select the column we use for next function
-  data_update[,3:8] <- apply(data_update[,3:8], 2, as.numeric)
+  data_update[,3:8] <- apply(data_update[,3:8], 2, as.numeric) # change the column into numerical
   return(data_update)
 }
 
 
 bouyData <- function(input){
   dta_1 <- bouyCbind()
-  sq1 <- seq(1, length(dta_1$DT), 60)
+  sq1 <- seq(1, length(dta_1$DT), 60) # set teh sequence for every six hour in x-axis
   x_label <- as.list(dta_1[sq1,"DT"])
   pt <- ggplot(dta_1, aes(x = DT)) +  #{{}} curly-curly, ensure plot the correct column
-    geom_line(aes(y = {{input}}), group = 1, color = "maroon") +
+    geom_line(aes(y = {{input}}), group = 1, color = "light blue") +
     scale_x_discrete(breaks = x_label[["DT"]]) +
     labs(x = "Timeline") + theme_bw() + 
     theme(axis.text.x = element_text(angle = 90), 
@@ -35,5 +35,5 @@ bouyData <- function(input){
 
 
 # Demo
-bouyData(WTMP)
+bouyData(WSPD)
 
