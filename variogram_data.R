@@ -32,3 +32,7 @@ getVario_Data <- function() {
 
 # Demo
 # df <- getVario_Data()
+
+# Note
+# This data fram combine with three datasets, the column with M_ such as M_vmax_gust means Modeled county wind speeds 
+# the column with E_ eg. E_vmax_gust means Estimated county wind speeds
