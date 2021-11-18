@@ -4,12 +4,8 @@ library(tidyverse)
 library(magrittr)
 library(stringr)
 library(lubridate)
-library(eply)
 
 
-
-str(unquote("x"))
-{{"x"}}
 download_data <- function(
   url = "https://www.ndbc.noaa.gov/view_text_file.php?filename=amrl1h2011.txt.gz&dir=data/historical/stdmet/",
   select_date = T){
@@ -113,4 +109,11 @@ calculate_stat_per6h <- function(method = "median"){
   
 }
 # demo
-df1 <- calculate_mid_per6h()
+# df1 <- calculate_stat_per6h()
+
+data_join <- function(){
+  library(hurricaneexposuredata)
+  data("hurr_tracks")
+  df1 <- filter(hurr_tracks,storm_id == "Lee-2011")
+  df1$date <- toString(ymd_hm(df1$date))
+}
