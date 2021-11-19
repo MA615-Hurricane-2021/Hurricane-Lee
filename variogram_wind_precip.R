@@ -1,3 +1,9 @@
+library(hurricaneexposure)
+library(drat)
+library(hurricaneexposuredata)
+library(dplyr)
+library(gstat)
+library(fields)
 # Function version, easy for further use. 
 varg_Clean <- function() {
   data("ext_tracks_wind")
@@ -27,6 +33,11 @@ varg_Plot <- function(cod, mod) {
   forvariogram <- varg_Clean()
   variogram_precip<-variogram(precip~1,~lati+longi,data = forvariogram)
   variogram_wind<-variogram(vmax_sust~1,~lati+longi,data = forvariogram)
+  variogram_precip_em<-vgram(loc=cbind(forvariogram$lati,forvariogram$longi),
+                             y=forvariogram$precip)
+  variogram_wind_em<-vgram(loc=cbind(forvariogram$lati,forvariogram$longi),
+                             y=forvariogram$vmax_sust)
+  
   
   #fit variogram model
   #Using Spherical model to fit variogram of precip, 
@@ -37,13 +48,13 @@ varg_Plot <- function(cod, mod) {
   
   #plot variogram for precip
   if(cod == "precip" & mod == 1) {
-    p <- plot(variogram_precip)
+    p <- plot(variogram_precip_em)
     return(p)
   }
   
   #plot variogram for wind
   if(cod == "wind" & mod == 1) {
-    p <- plot(variogram_wind)
+    p <- plot(variogram_wind_em)
     return(p)
   }
   
@@ -72,11 +83,7 @@ varg_Plot("wind", 1)
 
 #------------------------------------------------------------------------------------
 
-# library(hurricaneexposure)
-# library(drat)
-# library(hurricaneexposuredata)
-# library(dplyr)
-# library(gstat)
+
 # 
 # data("ext_tracks_wind")
 # data("storm_winds")
