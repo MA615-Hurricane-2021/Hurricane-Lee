@@ -1,30 +1,74 @@
 ---
-title: "Hurricane_Report_GroupLee"
-author: "Handing Zhang"
-date: "11/14/2021"
+title: "Hurricane Lee Report"
+author: "Jinyu Li, Yuyang Li, Handing Zhang, Zening Ye"
+date: "11/17/2021"
 output: pdf_document
+header-includes: \usepackage{setspace}\doublespacing
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup,include = FALSE}
+pacman::p_load(tidyverse,ggplot2,lubridate,magrittr,rlang,gstat,fields,hurricaneexposure,hurricaneexposuredata,knitr,gridExtra,
+               drat,dplyr,gstat
+               )
+source("bouy_plot.R")
+source("download_data.R")
+source("variogram_wind_precip.R")
 ```
 
-## R Markdown
+# Introduction
+The hurricane we chose was hurricane Lee, a.k.a, Tropical Storm Lee. It was the thirteenth named storm and fifteenth system overall of the 2011 Atlantic hurricane season. The formed date of the hurricane was September 2, and it dissipated on September 7, 2021. According to Wikipedia, hurricane Lee caused $2.8 billion in damage to the landfall area, and it was also the first subtropical or tropical storm to make landfall in Louisiana since Hurricane Gustav in 2008. In addition, the name Lee was used again in the 2017 season, even though it caused damage and loss of life. This report will analyze the main effects that Hurricane Lee caused for the states and counties, such as floods and tornadoes. In addition, this report contains three main parts: Movement Tract, Exploratory Data Analysis and Conclusion. 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# Hurricane Movement
+The hurricane data records every 6 hours for its movement. Hurricane Lee affected the following states: Louisiana, Mississippi, Alabama, Texas, New York, Pennsylvania, and Washington D.C Area. In addition, Lee caused historic flooding in Pennsylvania, New York. 
+```{r fig.align='center', echo = F, out.width = '85%'}
+map_tracks(storms = "Lee-2011",
+           alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-## Including Plots
+# Explorary Data Analysis
+## Data Cleaning
+The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and media of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).  
 
-You can also embed plots, for example:
+For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into 3 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
+```{r echo = F, message=FALSE}
+table1 <- buoyCbind() %>% rename(Year = "#YY") %>% rename(`Date/Time` = "DT" )
+kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes")
+table2 <- calculate_stat_per6h() %>% 
+  rename(m6h_WDIR = "WDIR_mid_6h") %>% 
+  rename(m6h_WSPD = "WSPD_mid_6h") %>%
+  rename(m6h_GST = "GST_mid_6h") %>% 
+  rename(m6h_PRES = "PRES_mid_6h") %>%
+  rename(m6h_ATMP = "ATMP_mid_6h") %>%
+  rename(m6h_WTMP = "WTMP_mid_6h")
+kable(table2[1:10,], caption = "Average Buoy Data in Every 6 Hours")
+table3 <- data_join()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Precipitation in Difference Counties
+Since the main impact of the whole hurricane was the danger to personal property and life safety caused by its flooding, there is some correlation between the amount of precipitation and flooding. Therefore, our group started with the analysis of rainfall between different regions. The first two plots indicated different precipitation and flood events happened in different areas. The third plot which means the timeline for the wind speed (m/s) through the area. 
+```{r echo = F, warning=FALSE, fig.align='center', out.height = '50%', out.width= '90%'}
+map_counties(storm = "Lee-2011", metric = "rainfall")
+floyd_map <- map_event_exposure(storm = "Lee-2011", event_type = "flood")
+map_tracks(storms = "Lee-2011", plot_object = floyd_map, plot_points = TRUE, 
+           color = "darkgray")
+buoyData(WSPD, "WSPD")
+```
+
+Based on the plots, we noticed the data we have for hurricane tracts cannot fully match with the data of rain. By comparing the first two plots, even though the hurricane tracks were recorded and stopped at the edge of Tennessee, the impact of the Lee still extended until New York. According to the Tropical Cyclone Report, “The rain from Lee’s remnants exacerbated the flood situation in the Mid-Atlantic and caused some of the most severe flooding in this region’s history.” Furthermore,  in some of these areas water levels broke previous record heights that were set in the Mid-Atlantic Floods of 2006.
+
+## Variogram
+For analyzing variograms, we select three datasets from the package ‘hurricaneexposuredata’. We extracted the latitude and longitude of each county in ‘county_centers’, precip and wind data from “rain” and “storm_winds” , and joined three datasets into one by fips, which represent different counties, for subsequent analysis.
+
+We could see the relationship between distance and variance using empirical variogram. Firstly using function variogram(), we got variogram figures about precip and wind separately, the x-axis is the distance between a pair of counties around hurricane path, and the y-axis is the semivariance of selected value between two counties, which formula is $\frac{(x-y)^2}{2}$, x and y is the data of precip or max sustained wind in two different counties. After we obtained the variogram, we tried to fit a variogram model to predict value. The figures are shown as follows.
+```{r echo=FALSE, out.height = '70%', out.width= '55%'}
+varg_Plot("precip", 1)
+varg_Plot("wind", 1)
+```
+However, the range of  variograms plotted by semivariance was limited, then we attempted another function vgram() to get an empirical variogram using the same dataset. The figures are shown as follows.
+```{r echo=FALSE, out.height = '70%', out.width= '55%'}
+varg_Plot("precip", 2)
+varg_Plot("wind", 2)
+```
+In these two figures, we can see the relationship between distance and variance clearly, it shows a positive correlation at first, then the variance reaches a peak and it decreases as the  distance becomes larger, which means that the difference between two counties with the increase of distance, it first increases and then decreases, and this pattern is the same either for precip or wind although the slope of two figures has slightly different.
