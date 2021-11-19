@@ -1,25 +1,18 @@
+# Author: Handing Zhang
+
 source("download_data.R")
 source("Wrangling_Danny.R")
 library(ggplot2)
+library(ggridges)
+# buoy_by_six$time <- 1:20
+# buoy_by_six
+# 
+# ggplot(buoy_by_six, aes(x = time, y = WSPD_avg_six)) +
+#   geom_line()
 
-buoy_by_six$time <- 1:20
-buoy_by_six
-
-ggplot(buoy_by_six, aes(x = time, y = WSPD_avg_six)) +
-  geom_line()
 
 
 
-buoy_by_hour$hour <- 1:nrow(buoy_by_hour)
-
-# Add a column for date in buoy_by_hour in order to make the time series plot later.
-#------------------------------------------------------------------------------------------------------
-buoy_by_hour %<>%
-  unite("MDH", MM:hh, sep = "", remove = F) %>%
-  mutate(Year = 2011, .before = MDH) %>%
-  unite("YMDH", Year:MDH, sep = "", remove = F) %>%
-  mutate(YMDH_Date = ymd_h(YMDH), .before = YMDH)
-# #------------------------------------------------------------------------------------------------------
 # 
 # 
 # # I want to create a Date column for buoy_by_six.
@@ -73,32 +66,34 @@ buoy_by_hour %<>%
 
 
 
-
-#Average Wind Speed by Hour Time Series Plot (Hour)
 #------------------------------------------------------------------------------------------------------
-WSPD_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = WSPD_avg)) +
+
+plot_buoy <- function(){
+  #Average Wind Speed by Hour Time Series Plot (Hour)
+  WSPD_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = WSPD_avg)) +
   geom_line() +
   xlab("Time line") + 
   ylab("Average Wind Speed by Hour")
-#------------------------------------------------------------------------------------------------------
+  
+  #Average Wind Speed by Hour Time Series Plot (Hour)
+  GST_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = GST_avg)) +
+    geom_line() +
+    xlab("Time line") + 
+    ylab("Average Peak Gust Speed by Hour")
+  
+  # Average Sea Sea level pressure by Hour
+  PRES_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = PRES_avg)) +
+    geom_line() +
+    xlab("Time line") + 
+    ylab("Average Sea Sea level pressure by Hour")
+  
+  
+  return(ggarrange(WSPD_ts, GST_ts, PRES_ts, nrow = 2, ncol = 2))
+}
 
-#Average Wind Speed by Hour Time Series Plot (Hour)
-#------------------------------------------------------------------------------------------------------
-GST_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = GST_avg)) +
-  geom_line() +
-  xlab("Time line") + 
-  ylab("Average Peak Gust Speed by Hour")
-#------------------------------------------------------------------------------------------------------
+# plot_buoy()
 
-# Average Sea Sea level pressure by Hour
-#------------------------------------------------------------------------------------------------------
-PRES_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = PRES_avg)) +
-  geom_line() +
-  xlab("Time line") + 
-  ylab("Average Sea Sea level pressure by Hour")
 
-#------------------------------------------------------------------------------------------------------
-ggarrange(GST_ts, WSPD_ts, PRES_ts, ncol = 2, nrow = 2)
 
 
 
@@ -110,11 +105,12 @@ class(as.Date(hurr_tracks_Lee1$`Date-Time`))
 wind_track_ts <- ggplot(hurr_tracks_Lee1, aes(x = `Date-Time`, y = wind )) +
   #scale_x_date(date_breaks = "six hour") +
   geom_line()
+
+
 #------------------------------------------------------------------------------------------------------
 
 
-ggarrange(GST_ts, WSPD_ts, PRES_ts,  wind_track_ts, ncol = 2, nrow = 2)
-
+# ggarrange(GST_ts, WSPD_ts, PRES_ts,  wind_track_ts, ncol = 2, nrow = 2)
 
 
 
@@ -122,9 +118,9 @@ ggarrange(GST_ts, WSPD_ts, PRES_ts,  wind_track_ts, ncol = 2, nrow = 2)
 
 #-------------------------------------------------------------------------------------------------------------
 buoy_by_six
-ggplot(buoy_by_six, aes(x = Date_Time, y = WSPD_avg_six)) +
+wind_buoy <- ggplot(buoy_by_six, aes(x = Date_Time, y = WSPD_avg_six)) +
   geom_line()
-
+# ggarrange(wind_buoy, wind_track_ts)
 #-------------------------------------------------------------------------------------------------------------
 
 
@@ -133,29 +129,68 @@ ggplot(buoy_by_six, aes(x = Date_Time, y = WSPD_avg_six)) +
 
 
 
+# 
+# # plot1: Cumulative rainfall of each county from one day before the hurricane arrives and two days after.
+# #-------------------------------------------------------------------------------------------------------------
+# 
+# map_counties(storm = "Lee-2011", metric = "rainfall", days_included = -1:2) +
+#   ggtitle("Rain during Lee (2011) for one day before and two days after closest approach")
+# #-------------------------------------------------------------------------------------------------------------
+# 
+
+
+# 
+# 
+# # Avg windspeed 
+# #-------------------------------------------------------------------------------------------------------------
+# 
+# ggplot(
+#   buoy_by_hour, 
+#   aes(x = WSPD_avg, y = dt, fill = stat(x))
+# ) +
+#   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+#   scale_fill_viridis_c(name = "Wind Speed", option = "D") +
+#   labs(title = 'Average Wind Speed Density During Lee') 
+# #-------------------------------------------------------------------------------------------------------------
+# 
 
 
 
 
+plot1 <- function(){
+  ggplot(
+    buoy_by_hour, 
+    aes(x = WSPD_avg, y = dt, fill = stat(x))
+  ) +
+    geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+    scale_fill_viridis_c(name = "Wind Speed", option = "D") +
+    labs(title = 'Density of Average Wind Speed Per Hour During Lee') +
+    geom_vline(xintercept = 8)
+  
+}
+
+plot2 <- function(){
+  ggplot(
+    buoy_by_hour, 
+    aes(x = GST_avg, y = dt, fill = stat(x))
+  ) +
+    geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+    scale_fill_viridis_c(name = "Wind Speed", option = "D") +
+    labs(title = 'Density of Average Peak Gust Speed Per Hour During Lee') +
+    geom_vline(xintercept = 12.5, color = "blue")
+  
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+plot3 <- function(){
+  ggplot(
+    buoy_by_hour, 
+    aes(x = PRES_avg, y = dt, fill = stat(x))
+  ) +
+    geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+    scale_fill_viridis_c(name = "Wind Speed", option = "C") +
+    labs(title = 'Density of Average See Pressure Per Hour During Lee') +
+    geom_vline(xintercept = 1000, color = "blue")
+}
 
 

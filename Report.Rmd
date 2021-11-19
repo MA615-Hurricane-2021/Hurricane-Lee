@@ -13,6 +13,7 @@ pacman::p_load(tidyverse,ggplot2,lubridate,magrittr,rlang,gstat,fields,hurricane
 source("bouy_plot.R")
 source("download_data.R")
 source("variogram_wind_precip.R")
+source("Visualization_Danny.R")
 ```
 
 # Introduction
@@ -57,6 +58,46 @@ buoyData(WSPD, "WSPD")
 ```
 
 Based on the plots, we noticed the data we have for hurricane tracts cannot fully match with the data of rain. By comparing the first two plots, even though the hurricane tracks were recorded and stopped at the edge of Tennessee, the impact of the Lee still extended until New York. According to the Tropical Cyclone Report, “The rain from Lee’s remnants exacerbated the flood situation in the Mid-Atlantic and caused some of the most severe flooding in this region’s history.” Furthermore,  in some of these areas water levels broke previous record heights that were set in the Mid-Atlantic Floods of 2006.
+
+
+##  How the buoy data reflected the landfall of Hurricane Lee. 
+
+We picked buoy amr1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. The plots below demonstrate the density of  average wind per hour and average peak Gust Speed (reported every 6 minutes) per hour from September 2nd 00:00 till September 6th 18:00. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plot1()
+plot2()
+```
+
+Observing the plot we can see that there are some fairly large increases on both measure of wind speed from Sep 3rd to Sep 5th, which is likely to be related to the landfall of the hurricane.
+We also took a look at the average Sea Level Atmosphere recorded at our buoy during Lee. We can clearly see that there’s  a huge drop from Sep 3rd to Sep 5th
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plot3()
+```
+
+As mentioned in  “Average sea level pressure is 1013.25 millibars or 29.92 inches of mercury.  A drop in atmospheric pressure usually indicates the approach of a storm, such as a hurricane.”(Hurrican Glossary, by SECOORA) As we can see from the density plot, the average sea level atmospheric pressure dropped far below the average level of 1013.25 millibars under normal circumstances. Therefore it is highly likely that the Approaching and landfall of Lee caused the drop of atmospheric pressure.
+Below are the time series plots for the three measurements at our buoy mentioned above. The average wind speed and average peak gust speed plots shows us where the three major spikes took place during the landfall of Lee, where the sea level atmospheric pressure time series plot 
+Demonstrates how the sea level atmospheric pressure dropped to a significantly low level and remained there during the landfall and slowly came up to normal as Lee moved further towards inland direction.
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plot_buoy()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Variogram
 For analyzing variograms, we select three datasets from the package ‘hurricaneexposuredata’. We extracted the latitude and longitude of each county in ‘county_centers’, precip and wind data from “rain” and “storm_winds” , and joined three datasets into one by fips, which represent different counties, for subsequent analysis.

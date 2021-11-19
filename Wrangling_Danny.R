@@ -20,14 +20,11 @@ head(closest_dist)
 head(ext_tracks_wind)
 head(storm_winds)
 head(rain)
-
-
 # Slice hurr_tracks by filtering for Hurricane Lee.
 #-------------------------------------------------------------------------------------------------------------
 hurr_tracks_Lee <- hurr_tracks %>% 
   filter(storm_id == "Lee-2011")
 #-------------------------------------------------------------------------------------------------------------
-
 
 df1 <- download_data()
 # Wrangle buoy to have columns containing Date, Date-Time for convenience for later use.
@@ -223,10 +220,24 @@ buoy_by_six$Date_Time <- ymd_h(buoy_by_six$Date_Time)
 # Wind Speed.
 # WSPD	Wind speed (m/s) averaged over an eight-minute period for buoys and a two-minute period for land stations.
 # Thus each day in Date we would have s
-
-p <- ggplot(buoy, aes(x = Date, y = WSPD)) +
-  geom_line() + 
-  xlab("")
-p
-head(buoy)
 #-------------------------------------------------------------------------------------------------------------
+
+
+
+buoy_by_hour$hour <- 1:nrow(buoy_by_hour)
+head(buoy_by_hour)
+# Add a column for date in buoy_by_hour in order to make the time series plot later.
+#------------------------------------------------------------------------------------------------------
+buoy_by_hour %<>%
+  unite("MDH", MM:hh, sep = "", remove = F) %>%
+  mutate(Year = 2011, .before = MDH) %>%
+  unite("YMDH", Year:MDH, sep = "", remove = F) %>%
+  mutate(YMDH_Date = ymd_h(YMDH), .before = YMDH) %>% 
+  unite("dt", MM:DD, sep =  "-", remove = F)
+
+# #------------------------------------------------------------------------------------------------------
+
+
+
+
+
