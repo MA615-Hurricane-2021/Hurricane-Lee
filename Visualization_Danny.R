@@ -14,20 +14,20 @@ buoy_by_hour$hour <- 1:nrow(buoy_by_hour)
 
 # Add a column for date in buoy_by_hour in order to make the time series plot later.
 #------------------------------------------------------------------------------------------------------
-buoy_by_hour %<>% 
-  unite("MDH", MM:hh, sep = "", remove = F) %>% 
-  mutate(Year = 2011, .before = MDH) %>% 
-  unite("YMDH", Year:MDH, sep = "", remove = F) %>% 
+buoy_by_hour %<>%
+  unite("MDH", MM:hh, sep = "", remove = F) %>%
+  mutate(Year = 2011, .before = MDH) %>%
+  unite("YMDH", Year:MDH, sep = "", remove = F) %>%
   mutate(YMDH_Date = ymd_h(YMDH), .before = YMDH)
-#------------------------------------------------------------------------------------------------------
-
-
-# I want to create a Date column for buoy_by_six.
-# ?????? My Date value messed up when being assigned.
-#------------------------------------------------------------------------------------------------------
+# #------------------------------------------------------------------------------------------------------
+# 
+# 
+# # I want to create a Date column for buoy_by_six.
+# # ?????? My Date value messed up when being assigned.
+# #------------------------------------------------------------------------------------------------------
 # buoy_by_six
 # 
-# a_null <- rep(NA, nrow(buoy_by_six))
+# a_null <- data.frame(rep(NA, nrow(buoy_by_six)))
 # a_null
 # start_Lee = ymd_h(2011090200)
 # start_Lee
@@ -42,6 +42,20 @@ buoy_by_hour %<>%
 # for (i in 1:20) {
 #   a_null[i] <- start_Lee + hours((i - 1) * 6)
 # }
+# atest <- a_null[1,]
+# length(atest)
+# data.frame(atest)
+# buoy_by_six$Date <- atest
+# buoy_by_six
+# atest1 <- atest[,-1]
+# length(atest1)
+# 
+# (a_null[1] <- as.Date(start_Lee + hours((2 - 1) * 6)))
+# a_null
+# 
+# str(a_null)
+# 
+# 
 # 
 # a_null[1] <-  start_Lee
 # a_null[1]
@@ -106,6 +120,12 @@ ggarrange(GST_ts, WSPD_ts, PRES_ts,  wind_track_ts, ncol = 2, nrow = 2)
 
 
 
+#-------------------------------------------------------------------------------------------------------------
+buoy_by_six
+ggplot(buoy_by_six, aes(x = Date_Time, y = WSPD_avg_six)) +
+  geom_line()
+
+#-------------------------------------------------------------------------------------------------------------
 
 
 

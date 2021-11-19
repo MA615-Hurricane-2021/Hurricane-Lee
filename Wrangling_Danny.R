@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------------------------------------
 library(drat)
 addRepo("geanders")
-pacman::p_load(tidyverse, dplyr, hurricaneexposuredata, hurricaneexposure, lubridate)
+pacman::p_load(tidyverse, dplyr, hurricaneexposuredata, hurricaneexposure, lubridate, ggpubr)
 #-------------------------------------------------------------------------------------------------------------
 
 # Loads all datasets available from the package.
@@ -29,7 +29,7 @@ hurr_tracks_Lee <- hurr_tracks %>%
 #-------------------------------------------------------------------------------------------------------------
 
 
-
+df1 <- download_data()
 # Wrangle buoy to have columns containing Date, Date-Time for convenience for later use.
 #-------------------------------------------------------------------------------------------------------------
 buoy <- df1 %>% 
@@ -179,6 +179,13 @@ a
 #     a$g[i] <- 4
 # }
 
+
+
+
+
+# Add a Date buoy_by_six
+#-------------------------------------------------------------------------------------------------------------
+
 a
 
 buoy_by_six <- a %>% 
@@ -188,8 +195,17 @@ buoy_by_six <- a %>%
             WVHT_avg_six = mean(WVHT_avg), 
             PRES_avg_six = mean(PRES_avg))
 
+index <- seq(from = 1, to = 115, by = 6)
 
-buoy_by_six
+
+buoy_by_six$hh <- a$hh[index]
+buoy_by_six$YYMM <- rep(201109, nrow(buoy_by_six))
+buoy_by_six %<>% 
+  unite("Date_Time", c(YYMM, DD, hh), sep = "", remove = F)
+
+buoy_by_six$Date_Time <- ymd_h(buoy_by_six$Date_Time)
+#-------------------------------------------------------------------------------------------------------------
+
 
 
 # b_list[1]
