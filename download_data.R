@@ -84,7 +84,7 @@ calculate_stat_per6h <- function(method = "median"){
   df2 %<>% mutate_at(4:ncol(df2), as.numeric)
   
   # get the column we want to calculate the median
-  col_1 <- colnames(df2)[-1:-4][-14:-15]
+  col_1 <- colnames(df2)[-1:-4][-11]
   
   # calculate the median of each column
   df2_stat <- df2 %>%
@@ -95,8 +95,10 @@ calculate_stat_per6h <- function(method = "median"){
   ## method_1
   df2_stat$Date <- df2_stat$group %>% sapply(FUN = group_to_date)
   
+  df2_stat %>% relocate(Date, .before = )
+  
   # aquire the time of each row in df2_stat
-  # method_2
+  ## method_2
   # df3 <- df2 %>% 
   #   unite("Time", "hh": "mm", sep = ":") %>% 
   #   unite("D", "Date": "Time", sep = " ") %>% 
