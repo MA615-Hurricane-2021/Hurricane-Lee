@@ -69,23 +69,23 @@ library(ggridges)
 #------------------------------------------------------------------------------------------------------
 
 plot_buoy <- function(){
-  #Average Wind Speed by Hour Time Series Plot (Hour)
+  #AVG Wind Speed by Hour Time Series Plot (Hour)
   WSPD_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = WSPD_avg)) +
   geom_line() +
   xlab("Time line") + 
-  ylab("Average Wind Speed by Hour")
+  ylab("AVG Wind Speed by Hour")
   
-  #Average Wind Speed by Hour Time Series Plot (Hour)
+  #AVG Wind Speed by Hour Time Series Plot (Hour)
   GST_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = GST_avg)) +
     geom_line() +
     xlab("Time line") + 
-    ylab("Average Peak Gust Speed by Hour")
+    ylab("AVG Peak Gust Speed by Hour")
   
-  # Average Sea Sea level pressure by Hour
+  # AVG Sea Sea level pressure by Hour
   PRES_ts <- ggplot(buoy_by_hour, aes(x = YMDH_Date, y = PRES_avg)) +
     geom_line() +
     xlab("Time line") + 
-    ylab("Average Sea Sea level pressure by Hour")
+    ylab("AVG Sea Sea level pressure by Hour")
   
   
   return(ggarrange(WSPD_ts, GST_ts, PRES_ts, nrow = 2, ncol = 2))
@@ -150,7 +150,7 @@ wind_buoy <- ggplot(buoy_by_six, aes(x = Date_Time, y = WSPD_avg_six)) +
 # ) +
 #   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
 #   scale_fill_viridis_c(name = "Wind Speed", option = "D") +
-#   labs(title = 'Average Wind Speed Density During Lee') 
+#   labs(title = 'AVG Wind Speed Density During Lee') 
 # #-------------------------------------------------------------------------------------------------------------
 # 
 
@@ -164,7 +164,7 @@ plot1 <- function(){
   ) +
     geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
     scale_fill_viridis_c(name = "Wind Speed", option = "D") +
-    labs(title = 'Density of Average Wind Speed Per Hour During Lee') +
+    labs(title = 'Density of AVG Wind Speed Per Hour During Lee') +
     geom_vline(xintercept = 8)
   
 }
@@ -176,7 +176,7 @@ plot2 <- function(){
   ) +
     geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
     scale_fill_viridis_c(name = "Wind Speed", option = "D") +
-    labs(title = 'Density of Average Peak Gust Speed Per Hour During Lee') +
+    labs(title = 'Density of AVG Peak Gust Speed Per Hour During Lee') +
     geom_vline(xintercept = 12.5, color = "blue")
   
 }
@@ -189,7 +189,7 @@ plot3 <- function(){
   ) +
     geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
     scale_fill_viridis_c(name = "Wind Speed", option = "C") +
-    labs(title = 'Density of Average See Pressure Per Hour During Lee') +
+    labs(title = 'Density of AVG See Pressure Per Hour During Lee') +
     geom_vline(xintercept = 1000, color = "blue")
 }
 
