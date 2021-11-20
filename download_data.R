@@ -135,4 +135,6 @@ data_join <- function(){
   # full join the hurr_Lee and the buoy_stat
   hurr_Lee_join <- hurr_Lee %>% full_join(buoy_stat, by = c("date"="Date"))
   
+  return(hurr_Lee_join)
+  
 }

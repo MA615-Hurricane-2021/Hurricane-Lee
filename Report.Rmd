@@ -44,8 +44,13 @@ table2 <- calculate_stat_per6h() %>%
   rename(m6h_PRES = "PRES_mid_6h") %>%
   rename(m6h_ATMP = "ATMP_mid_6h") %>%
   rename(m6h_WTMP = "WTMP_mid_6h")
-kable(table2[1:10,], caption = "Average Buoy Data in Every 6 Hours")
-# table3 <- data_join()
+kable(table2[1:10,], caption = "Median Buoy Data in Every 6 Hours")
+
+table3 <- data_join()
+table3_1 <- table3 %>% select(1:8)
+table3_2 <- table3 %>% select(3,9:13)
+kable(table3_1[1:10,], caption = "Joined hurricane col 1 to 8")
+kable(table3_2[1:10,], caption = "Joined hurricane col 9 to 13")
 ```
 
 ## Precipitation in Difference Counties
