@@ -1,4 +1,4 @@
- ---
+---
 title: "Hurricane Lee Report"
 author: "Jinyu Li, Yuyang Li, Handing Zhang, Zening Ye"
 date: "11/17/2021"
@@ -17,7 +17,7 @@ source("Visualization_Danny.R")
 ```
 
 # Introduction
-The hurricane we chose was hurricane Lee, a.k.a, Tropical Storm Lee. It was the thirteenth named storm and fifteenth system overall of the 2011 Atlantic hurricane season. The formed date of the hurricane was September 2, and it dissipated on September 7, 2021. According to Wikipedia, hurricane Lee caused $2.8 billion in damage to the landfall area, and it was also the first subtropical or tropical storm to make landfall in Louisiana since Hurricane Gustav in 2008. In addition, the name Lee was used again in the 2017 season, even though it caused damage and loss of life. This report will analyze the main effects that Hurricane Lee caused for the states and counties, such as floods and tornadoes. In addition, this report contains three main parts: Movement Tract, Exploratory Data Analysis and Conclusion. 
+The hurricane we chose was hurricane Lee, a.k.a, Tropical Storm Lee. It was the thirteenth named storm and fifteenth system overall of the 2011 Atlantic hurricane season. The formed date of the hurricane was September 2, and it dissipated on September 7, 2021. According to [Wikipedia,Tropical Storm Lee,](https://en.wikipedia.org/wiki/Tropical_Storm_Lee_(2011)), hurricane Lee caused $2.8 billion in damage to the landfall area, and it was also the first subtropical or tropical storm to make landfall in Louisiana since Hurricane Gustav in 2008. In addition, the name Lee was used again in the 2017 season, even though it caused damage and loss of life. This report will analyze the main effects that Hurricane Lee caused for the states and counties, such as floods and tornadoes. In addition, this report contains three main parts: Movement Tract, Exploratory Data Analysis and Conclusion. 
 
 # Hurricane Movement
 The hurricane data records every 6 hours for its movement. Hurricane Lee affected the following states: Louisiana, Mississippi, Alabama, Texas, New York, Pennsylvania, and Washington D.C Area. In addition, Lee caused historic flooding in Pennsylvania, New York. 
@@ -28,10 +28,10 @@ map_tracks(storms = "Lee-2011",
 
 # Explorary Data Analysis
 ## Data Cleaning
+
 The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and median of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).  
 
 For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
-
 
 According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into 3 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
 ```{r echo = F, message=FALSE, fig.align='center'}
@@ -45,10 +45,11 @@ table2 <- calculate_stat_per6h() %>%
   rename(m6h_ATMP = "ATMP_mid_6h") %>%
   rename(m6h_WTMP = "WTMP_mid_6h")
 kable(table2[1:10,], caption = "Average Buoy Data in Every 6 Hours")
-table3 <- data_join()
+# table3 <- data_join()
 ```
 
 ## Precipitation in Difference Counties
+
 Since the main impact of the whole hurricane was the danger to personal property and life safety caused by its flooding, there is some correlation between the amount of precipitation and flooding. Therefore, our group started with the analysis of rainfall between different regions. The first two plots indicated different precipitation and flood events happened in different areas. The third plot which means the timeline for the wind speed (m/s) through the area. 
 ```{r echo = F, warning=FALSE, fig.align='center', out.height = '50%', out.width= '90%'}
 map_counties(storm = "Lee-2011", metric = "rainfall")
@@ -58,14 +59,14 @@ map_tracks(storms = "Lee-2011", plot_object = floyd_map, plot_points = TRUE,
 buoyData(WSPD, "WSPD")
 ```
 
-Based on the plots, we noticed the data we have for hurricane tracts cannot fully match with the data of rain. By comparing the first two plots, even though the hurricane tracks were recorded and stopped at the edge of Tennessee, the impact of the Lee still extended until New York. According to the Tropical Cyclone Report, “The rain from Lee’s remnants exacerbated the flood situation in the Mid-Atlantic and caused some of the most severe flooding in this region’s history.” Furthermore,  in some of these areas water levels broke previous record heights that were set in the Mid-Atlantic Floods of 2006.
+Based on the plots, we noticed the data we have for hurricane tracts cannot fully match with the data of rain. By comparing the first two plots, even though the hurricane tracks were recorded and stopped at the edge of Tennessee, the impact of the Lee still extended until New York. According to the [Tropical Cyclone Report](https://www.nhc.noaa.gov/data/tcr/AL132011_Lee.pdf), “The rain from Lee’s remnants exacerbated the flood situation in the Mid-Atlantic and caused some of the most severe flooding in this region’s history.” Furthermore,  in some of these areas water levels broke previous record heights that were set in the Mid-Atlantic Floods of 2006.
 
 
 ##  How the buoy data reflected the landfall of Hurricane Lee. 
 
 We picked buoy amr1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. The plots below demonstrate the density of  average wind per hour and average peak Gust Speed (reported every 6 minutes) per hour from September 2nd 00:00 till September 6th 18:00. 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%', fig.align='center'}
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%'}
 plot1()
 plot2()
 ```
@@ -102,3 +103,9 @@ varg_Plot("wind", 2)
 ```
 
 In these two figures, we can see the relationship between distance and variance clearly, it shows a positive correlation at first, then the variance reaches a peak and it decreases as the  distance becomes larger, which means that the difference between two counties with the increase of distance, it first increases and then decreases, and this pattern is the same either for precip or wind though the slope of two figures has slightly different.
+
+# Reference
+*NOAA: https://www.ndbc.noaa.gov/view_text_file.php?filename=amrl1h2011.txt.gz&dir=data/historical/stdmet/*  
+*Tropical Storm Lee: https://en.wikipedia.org/wiki/Tropical_Storm_Lee_(2011)*  
+*Tropical Cyclone Report: https://www.nhc.noaa.gov/data/tcr/AL132011_Lee.pdf*  
+
