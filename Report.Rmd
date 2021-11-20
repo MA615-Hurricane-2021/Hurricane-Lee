@@ -32,8 +32,13 @@ The data we used from the National Oceanic and Atmospheric Administration(NOAA) 
 
 For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
 
+<<<<<<< HEAD
 According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into three 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
 ```{r echo = F, message=FALSE}
+=======
+According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into 3 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
+```{r echo = F, message=FALSE, fig.align='center'}
+>>>>>>> fe7381a3f59fd1eb283078d18dab75773e5141f6
 table1 <- buoyCbind() %>% rename(Year = "#YY") %>% rename(`Date/Time` = "DT" )
 kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes")
 table2 <- calculate_stat_per6h() %>% 
@@ -64,40 +69,24 @@ Based on the plots, we noticed the data we have for hurricane tracts cannot full
 
 We picked buoy amr1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. The plots below demonstrate the density of  average wind per hour and average peak Gust Speed (reported every 6 minutes) per hour from September 2nd 00:00 till September 6th 18:00. 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%', fig.align='center'}
 plot1()
 plot2()
 ```
 
-Observing the plot we can see that there are some fairly large increases on both measure of wind speed from Sep 3rd to Sep 5th, which is likely to be related to the landfall of the hurricane.
-We also took a look at the average Sea Level Atmosphere recorded at our buoy during Lee. We can clearly see that there’s  a huge drop from Sep 3rd to Sep 5th
+Observing the plot we can see that there are some fairly large increases on both measure of wind speed from Sept. 3rd to Sept. 5th, which is likely to be related to the landfall of the hurricane. We also took a look at the average Sea Level Atmosphere recorded at our buoy during Lee. We can clearly see that there’s  a huge drop from Sept. 3rd to Sept. 5th
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width='75%', out.height= '75%', fig.align='center'}
 plot3()
 ```
 
-As mentioned in  “Average sea level pressure is 1013.25 millibars or 29.92 inches of mercury.  A drop in atmospheric pressure usually indicates the approach of a storm, such as a hurricane.”(Hurrican Glossary, by SECOORA) As we can see from the density plot, the average sea level atmospheric pressure dropped far below the average level of 1013.25 millibars under normal circumstances. Therefore it is highly likely that the Approaching and landfall of Lee caused the drop of atmospheric pressure.
+As mentioned in “Average sea level pressure is 1013.25 millibars or 29.92 inches of mercury. A drop in atmospheric pressure usually indicates the approach of a storm, such as a hurricane.”(Hurricane Glossary, by SECOORA) As we can see from the density plot, the average sea level atmospheric pressure dropped far below the average level of 1013.25 millibars under normal circumstances. Therefore it is highly likely that the Approaching and landfall of Lee caused the drop of atmospheric pressure.
+
 Below are the time series plots for the three measurements at our buoy mentioned above. The average wind speed and average peak gust speed plots shows us where the three major spikes took place during the landfall of Lee, where the sea level atmospheric pressure time series plot 
 Demonstrates how the sea level atmospheric pressure dropped to a significantly low level and remained there during the landfall and slowly came up to normal as Lee moved further towards inland direction.
-
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '50%', out.width= '90%'}
 plot_buoy()
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Variogram
 For analyzing variograms, we select three datasets from the package ‘hurricaneexposuredata’. We extracted the latitude and longitude of each county in ‘county_centers’, precip and wind data from “rain” and “storm_winds” , and joined three datasets into one by fips, which represent different counties, for subsequent analysis.
