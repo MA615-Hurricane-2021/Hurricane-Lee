@@ -32,13 +32,9 @@ The data we used from the National Oceanic and Atmospheric Administration(NOAA) 
 
 For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
 
-<<<<<<< HEAD
-According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into three 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
-```{r echo = F, message=FALSE}
-=======
+
 According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into 3 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
 ```{r echo = F, message=FALSE, fig.align='center'}
->>>>>>> fe7381a3f59fd1eb283078d18dab75773e5141f6
 table1 <- buoyCbind() %>% rename(Year = "#YY") %>% rename(`Date/Time` = "DT" )
 kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes")
 table2 <- calculate_stat_per6h() %>% 
