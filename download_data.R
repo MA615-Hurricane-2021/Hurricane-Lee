@@ -115,8 +115,24 @@ calculate_stat_per6h <- function(method = "median"){
 # df1 <- calculate_stat_per6h()
 
 data_join <- function(){
+  # get the hurricane track data
   library(hurricaneexposuredata)
-  data("hurr_tracks")
-  df1 <- filter(hurr_tracks,storm_id == "Lee-2011")
-  df1$date <- toString(ymd_hm(df1$date))
+  hurr_df <- get(data("hurr_tracks"))
+  
+  # filter out the Hurricane Lee
+  hurr_Lee <- hurr_df %>% filter(storm_id == "Lee-2011")
+  
+  # make the Date column of hurricane data into lubridate type
+  # hurr_Lee %<>% rename(Date = date)
+  hurr_Lee$date %<>% ymd_hm()
+  
+  # get the buoy data summarized by median
+  buoy_stat <- calculate_stat_per6h()
+  
+  # make the Date column of buoy data into lubridate type
+  buoy_stat$Date <- buoy_stat$Date %>% ymd_hm()
+  
+  # full join the hurr_Lee and the buoy_stat
+  hurr_Lee_join <- hurr_Lee %>% full_join(buoy_stat, by = c("date"="Date"))
+  
 }
