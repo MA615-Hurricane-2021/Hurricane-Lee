@@ -28,11 +28,11 @@ map_tracks(storms = "Lee-2011",
 
 # Explorary Data Analysis
 ## Data Cleaning
-The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and media of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).  
+The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and median of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).  
 
 For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
 
-According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into 3 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
+According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into three 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
 ```{r echo = F, message=FALSE}
 table1 <- buoyCbind() %>% rename(Year = "#YY") %>% rename(`Date/Time` = "DT" )
 kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes")
@@ -116,4 +116,4 @@ varg_Plot("precip", 2)
 varg_Plot("wind", 2)
 ```
 
-In these two figures, we can see the relationship between distance and variance clearly, it shows a positive correlation at first, then the variance reaches a peak and it decreases as the  distance becomes larger, which means that the difference between two counties with the increase of distance, it first increases and then decreases, and this pattern is the same either for precip or wind although the slope of two figures has slightly different.
+In these two figures, we can see the relationship between distance and variance clearly, it shows a positive correlation at first, then the variance reaches a peak and it decreases as the  distance becomes larger, which means that the difference between two counties with the increase of distance, it first increases and then decreases, and this pattern is the same either for precip or wind though the slope of two figures has slightly different.
