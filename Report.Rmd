@@ -105,15 +105,15 @@ For analyzing variograms, we select three datasets from the package ‘hurricane
 We could see the relationship between distance and variance using empirical variogram. Firstly using function variogram(), we got variogram figures about precip and wind separately, the x-axis is the distance between a pair of counties around hurricane path, and the y-axis is the semivariance of selected value between two counties, which formula is $\frac{(x-y)^2}{2}$, x and y is the data of precip or max sustained wind in two different counties. After we obtained the variogram, we tried to fit a variogram model to predict value. The figures are shown as follows.
 
 ```{r echo=FALSE, out.height = '70%', out.width= '55%'}
-varg_Plot("precip",2)
-varg_Plot("wind", 2)
+varg_Plot("precip",1)
+varg_Plot("wind", 1)
 ```
 
 However, the range of  variograms plotted by semivariance was limited, then we attempted another function vgram() to get an empirical variogram using the same dataset. The figures are shown as follows.
 
 ```{r echo=FALSE, out.height = '70%', out.width= '55%'}
-varg_Plot("precip", 1)
-varg_Plot("wind", 1)
+varg_Plot("precip", 2)
+varg_Plot("wind", 2)
 ```
 
 In these two figures, we can see the relationship between distance and variance clearly, it shows a positive correlation at first, then the variance reaches a peak and it decreases as the  distance becomes larger, which means that the difference between two counties with the increase of distance, it first increases and then decreases, and this pattern is the same either for precip or wind although the slope of two figures has slightly different.
