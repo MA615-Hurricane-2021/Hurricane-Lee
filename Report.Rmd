@@ -51,7 +51,7 @@ kable(table2[1:10,], caption = "Median Buoy Data in Every 6 Hours", booktabs = T
   kable_styling(latex_option = "striped")
 ```
 
-Since hurricane data are collected every 6 hours and buoy data are collected every 6 minutes in this case, and we want to combine the two data, we need to summarize buoy data by every 6 hours. After we full join the two data, our data are as follows in Table 3 and Table 4.
+Since hurricane data are collected every 6 hours and buoy data are collected every 6 minutes in this case, and we want to combine the two data, we need to summarize buoy data by every 6 hours. After we full join the two data, our data are as follows in Table 3 and Table 4. 
 ```{r echo=FALSE, message=FALSE}
 table3 <- data_join()
 table3_1 <- table3 %>% select(1:8) %>% 
@@ -64,8 +64,8 @@ table3_2 <- table3 %>% select(3,9:13) %>%
   rename(PRES6h = "PRES_mid_6h") %>%
   rename(ATMP6h = "ATMP_mid_6h") %>%
   rename(WTMP6h = "WTMP_mid_6h")
-kable(table3_1[1:10,], caption = "Joined hurricane col 1 to 8", booktabs = T)
-kable(table3_2[1:10,], caption = "Joined hurricane col 9 to 13", booktabs = T)
+kable(table3_1[1:5,], caption = "Joined hurricane col 1 to 8", booktabs = T) 
+kable(table3_2[1:5,], caption = "Joined hurricane col 9 to 13", booktabs = T)
 ```
 
 \newpage
