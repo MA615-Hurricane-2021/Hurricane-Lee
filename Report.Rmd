@@ -8,7 +8,7 @@ header-includes: \usepackage{setspace}\doublespacing
 
 ```{r setup,include = FALSE}
 pacman::p_load(tidyverse,ggplot2,lubridate,magrittr,rlang,gstat,fields,hurricaneexposure,hurricaneexposuredata,knitr,gridExtra,
-               drat,dplyr,gstat
+               drat,dplyr,gstat,kableExtra
                )
 source("bouy_plot.R")
 source("download_data.R")
@@ -34,9 +34,9 @@ The data we used from the National Oceanic and Atmospheric Administration(NOAA) 
 For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
 
 According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into 3 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
-```{r echo = F, message=FALSE, fig.align='center'}
+```{r echo = F, message=FALSE}
 table1 <- buoyCbind() %>% rename(Year = "#YY") %>% rename(`Date/Time` = "DT" )
-kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes")
+kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes", booktabs = T)
 table2 <- calculate_stat_per6h() %>% 
   rename(m6h_WDIR = "WDIR_mid_6h") %>% 
   rename(m6h_WSPD = "WSPD_mid_6h") %>%
@@ -44,13 +44,16 @@ table2 <- calculate_stat_per6h() %>%
   rename(m6h_PRES = "PRES_mid_6h") %>%
   rename(m6h_ATMP = "ATMP_mid_6h") %>%
   rename(m6h_WTMP = "WTMP_mid_6h")
-kable(table2[1:10,], caption = "Median Buoy Data in Every 6 Hours")
+kable(table2[1:10,], caption = "Median Buoy Data in Every 6 Hours", booktabs = T) %>%
+  kable_styling(latex_option = "striped")
 
 table3 <- data_join()
 table3_1 <- table3 %>% select(1:8)
 table3_2 <- table3 %>% select(3,9:13)
-kable(table3_1[1:10,], caption = "Joined hurricane col 1 to 8")
-kable(table3_2[1:10,], caption = "Joined hurricane col 9 to 13")
+kable(table3_1[1:10,], caption = "Joined hurricane col 1 to 8", booktabs = T) %>% 
+  kable_styling(latex_options = "striped")
+kable(table3_2[1:10,], caption = "Joined hurricane col 9 to 13", booktabs = T) %>%
+  kable_styling(latex_options = "striped")
 ```
 
 ## Precipitation in Difference Counties
@@ -114,3 +117,7 @@ In these two figures, we can see the relationship between distance and variance 
 *Tropical Storm Lee: https://en.wikipedia.org/wiki/Tropical_Storm_Lee_(2011)*  
 *Tropical Cyclone Report: https://www.nhc.noaa.gov/data/tcr/AL132011_Lee.pdf*  
 
+
+\newpage
+## Appendix
+### More EDA
