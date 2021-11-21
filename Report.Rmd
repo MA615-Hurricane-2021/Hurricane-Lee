@@ -4,10 +4,11 @@ author: "Jinyu Li, Yuyang Li, Handing Zhang, Zening Ye"
 date: "11/17/2021"
 output: 
   pdf_document: 
-    latex_engine: xelatex
+    latex_engine: lualatex
 header-includes: 
   - \usepackage{setspace}\renewcommand{\baselinestretch}{1.5}
   - \setlength{\parindent}{2em}
+  - \usepackage{float}
 ---
 
 ```{r setup,include = FALSE}
@@ -20,27 +21,24 @@ source("variogram_wind_precip.R")
 source("Visualization_Danny.R")
 source("spot_point_in_map.R")
 ```
-
+\vspace{-0.8cm}
 # Introduction
 The hurricane we chose was hurricane Lee, a.k.a, Tropical Storm Lee. It was the thirteenth named storm and fifteenth system overall of the 2011 Atlantic hurricane season. The formed date of the hurricane was September 2, and it dissipated on September 7, 2021. According to [Wikipedia,Tropical Storm Lee,](https://en.wikipedia.org/wiki/Tropical_Storm_Lee_(2011)), hurricane Lee caused $2.8 billion in damage to the landfall area, and it was also the first subtropical or tropical storm to make landfall in Louisiana since Hurricane Gustav in 2008. In addition, the name Lee was used again in the 2017 season, even though it caused damage and loss of life. This report will analyze the main effects that Hurricane Lee caused for the states and counties, such as floods and tornadoes. In addition, this report contains three main parts: Movement Tract, Exploratory Data Analysis and Conclusion. 
 
 # Hurricane Movement
 The hurricane data records every 6 hours for its movement. Hurricane Lee affected the following states: Louisiana, Mississippi, Alabama, Texas, New York, Pennsylvania, and Washington D.C Area. In addition, Lee caused historic flooding in Pennsylvania, New York. 
-```{r fig.align='center', echo = F, out.width = '85%'}
+\vspace{-0.5cm}
+```{r echo = F, fig.height=2.5, fig.align='center'}
 map_tracks(storms = "Lee-2011",
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
 # Explorary Data Analysis
 ## Data Cleaning
-The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and median of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).  
-
-For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
-
-According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into three 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
-```{r echo = F, message=FALSE}
+The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and median of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).
+```{r echo = FALSE, message=FALSE}
 table1 <- buoyCbind() %>% rename(Year = "#YY") %>% rename(`Date/Time` = "DT" )
-kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes", booktabs = T)
+kable(table1[1:5,], caption = "Buoy Data in Every 6 Minutes", booktabs = T)
 table2 <- calculate_stat_per6h() %>%
   rename(WDIR6h = "WDIR_mid_6h") %>% 
   rename(WSPD6h = "WSPD_mid_6h") %>%
@@ -48,12 +46,14 @@ table2 <- calculate_stat_per6h() %>%
   rename(PRES6h = "PRES_mid_6h") %>%
   rename(ATMP6h = "ATMP_mid_6h") %>%
   rename(WTMP6h = "WTMP_mid_6h")
-kable(table2[1:10,], caption = "Median Buoy Data in Every 6 Hours", booktabs = T) %>%
+kable(table2[1:5,], caption = "Median Buoy Data in Every 6 Hours", booktabs = T) %>%
   kable_styling(latex_option = "striped")
 ```
 
-Since hurricane data are collected every 6 hours and buoy data are collected every 6 minutes in this case, and we want to combine the two data, we need to summarize buoy data by every 6 hours. After we full join the two data, our data are as follows in Table 3 and Table 4. 
-```{r echo=FALSE, message=FALSE}
+For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future.  
+
+According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into three 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee. Since hurricane data are collected in different units, and we want to combine the two data. Therefore, we need to summarize buoy data by every 6 hours. The data are as follows in Table 3 and Table 4.  
+```{r echo = F, message=FALSE}
 table3 <- data_join()
 table3_1 <- table3 %>% select(1:8) %>% 
   rename(WDIR6h = "WDIR_mid_6h") %>% 
@@ -69,11 +69,10 @@ kable(table3_1[1:5,], caption = "Joined hurricane col 1 to 8", booktabs = T)
 kable(table3_2[1:5,], caption = "Joined hurricane col 9 to 13", booktabs = T)
 ```
 
-\newpage
 ## Precipitation in Difference Counties
 
 The main impact of the whole hurricane was the danger to personal property and life safety caused by its flooding. In Pennsylvania, over 16,000 homes and businesses received at least minor damage, including over 1,000 homes and businesses that were completely destroyed. Total estimated damage costs from Tropical Storm Lee are over $2 billion.” ( 4th Anniversary of the Flooding from Tropical Storm Lee  by State College PA).  Since there might be some correlation between the amount of precipitation and flooding, our group started with the analysis of rainfall between different regions. The first two plots indicated different precipitation and flood events happened in different areas. The heavy rain from one day before till one day after the landfall of Lee, along its track in the Central area of Pennsylvania, as shown in the map, saturated the soil, which eventually exacerbated the flood. The third plot demonstrates  the timeline of the wind speed (m/s) through the area. 
-```{r echo = F, warning=FALSE, fig.align='center', out.height = '50%', out.width= '90%'}
+```{r echo = F, warning=FALSE, fig.width= 5.5, fig.height= 4, fig.align='center'}
 map_counties(storm = "Lee-2011", metric = "rainfall")
 floyd_map <- map_event_exposure(storm = "Lee-2011", event_type = "flood")
 map_tracks(storms = "Lee-2011", plot_object = floyd_map, plot_points = TRUE, 
@@ -85,24 +84,24 @@ Based on the plots, we noticed the data we have for hurricane tracts cannot full
 
 
 ##  How the buoy data reflected the landfall of Hurricane Lee. 
-We picked buoy amr1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. 
+We picked buoy AMR1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. 
 
 The map below identifies the buoy station we choose by a yellow point and the tracks of hurricanes with a blue line. 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%'}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height= 3, fig.align='center'}
 plot_buoy_with_tracks()
 ```
 
 The plots below demonstrate the density of  average wind per hour and average peak Gust Speed (reported every 6 minutes) per hour from September 2nd 00:00 till September 6th 18:00. 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%'}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=2.5, fig.width= 3.5}
 plot1()
 plot2()
 ```
 
 Observing the plot we can see that there are some fairly large increases on both measure of wind speed from Sept. 3rd to Sept. 5th, which is likely to be related to the landfall of the hurricane. We also took a look at the average Sea Level Atmosphere recorded at our buoy during Lee. We can clearly see that there’s  a huge drop from Sept. 3rd to Sept. 5th
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, out.width='75%', out.height= '75%', fig.align='center'}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=6, fig.height = 3.5}
 plot3()
 ```
 
@@ -110,7 +109,7 @@ As mentioned in “Average sea level pressure is 1013.25 millibars or 29.92 inch
 
 Below are the time series plots for the three measurements at our buoy mentioned above. The average wind speed and average peak gust speed plots shows us where the three major spikes took place during the landfall of Lee, where the sea level atmospheric pressure time series plot 
 Demonstrates how the sea level atmospheric pressure dropped to a significantly low level and remained there during the landfall and slowly came up to normal as Lee moved further towards inland direction.
-```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '50%', out.width= '90%'}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width= 6, fig.align='center'}
 plot_buoy()
 ```
 
@@ -119,14 +118,14 @@ For analyzing variograms, we select three datasets from the package ‘hurricane
 
 We could see the relationship between distance and variance using empirical variogram. Firstly using function variogram(), we got variogram figures about precip and wind separately, the x-axis is the distance between a pair of counties around hurricane path, and the y-axis is the semivariance of selected value between two counties, which formula is $\frac{(x-y)^2}{2}$, x and y is the data of precip or max sustained wind in two different counties. After we obtained the variogram, we tried to fit a variogram model to predict value. The figures are shown as follows.
 
-```{r echo=FALSE, out.height = '70%', out.width= '55%'}
+```{r echo=FALSE, fig.height = 3.5, fig.width= 3.5, fig.cap= "Variogram Fit Model"}
 varg_Plot("precip",1)
 varg_Plot("wind", 1)
 ```
 
 However, the range of  variograms plotted by semivariance was limited, then we attempted another function vgram() to get an empirical variogram using the same dataset. The figures are shown as follows.
 
-```{r echo=FALSE, out.height = '70%', out.width= '55%'}
+```{r echo=FALSE, fig.height = 3.5, fig.width= 3.5, fig.cap= "Emperical Variogram"}
 varg_Plot("precip", 2)
 varg_Plot("wind", 2)
 ```
@@ -135,11 +134,12 @@ In these two figures, we can see the relationship between distance and variance 
 
 # Conclusion
 According to our analysis, we might answer the following questions:
+
 **A. Difference between buoy data and land-based data:**  
-a. Buoy data include more information about the weather but land-based data don’t;
-b. We assume the buoy data are collected at a fixed location while land-based data are collected in every relative county;
-c. Buoy data are data on the ocean, while the land-based data are data of the land；
-d. Buoy data are collected every 6 minutes, but hurricane data are collected every 6 hours.
+$a.$ Buoy data include more information about the weather but land-based data don’t;  
+$b.$ We assume the buoy data are collected at a fixed location while land-based data are collected in every relative county;  
+$c.$ Buoy data are data on the ocean, while the land-based data are data of the land;  
+$d.$ Buoy data are collected every 6 minutes, but hurricane data are collected every 6 hours.
 
 **B. Are two sets of data related and how? How do we know?**  
 According to the data, we can tell the 2 sets of data are related because there are some similar variables like wind speed and wind direction. Meanwhile, the location of the buoy is just at the landfall of the hurricane. Therefore, when the hurricane landed, the variables, eg. wind speed, in hurricane data are similar to the variables of wind speed in buoy data.

@@ -48,29 +48,29 @@ varg_Plot <- function(cod, mod) {
   
     # add with the fits 
   if(cod == "precip" & mod == 1) {
-    p <-  plot(variogram_precip,variogram_precip.fit,
-               main="Variogram of precip and fitted line",
-               xlab="distance between counties",
-               ylab="semivariance",pch=1,col="black")
+    p <- plot(variogram_precip,variogram_precip.fit,
+        main = NULL,
+        xlab="distance between counties",
+        ylab="semivariance",pch=1,col="black")
     return(p)
   }
   if(cod == "wind" & mod == 1) {
-    p <- plot(variogram_wind,variogram_wind.fit,    
-              main="Variogram of sustained wind and fitted line",
-              xlab="distance between counties",
-              ylab="semivariance",pch=16,col="black")
+    p <- plot(variogram_wind,variogram_wind.fit,
+         main = NULL,
+         xlab="distance between counties",
+         ylab="semivariance",pch=16,col="black")
     return(p)
   }
 
   #plot variogram for precip
   if(cod == "precip" & mod == 2) {
-    plot(variogram_precip_em)
+    plot(variogram_precip_em, main = NULL)
 
   }
   
   #plot variogram for wind
   if(cod == "wind" & mod == 2) {
-     plot(variogram_wind_em)
+     plot(variogram_wind_em, main = NULL)
     
   }
 }

@@ -164,7 +164,6 @@ plot1 <- function(){
   ) +
     geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
     scale_fill_viridis_c(name = "Wind Speed", option = "D") +
-    labs(title = 'Density of AVG Wind Speed Per Hour During Lee') +
     geom_vline(xintercept = 8)
   
 }
@@ -176,7 +175,6 @@ plot2 <- function(){
   ) +
     geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
     scale_fill_viridis_c(name = "Wind Speed", option = "D") +
-    labs(title = 'Density of AVG Peak Gust Speed Per Hour During Lee') +
     geom_vline(xintercept = 12.5, color = "blue")
   
 }
