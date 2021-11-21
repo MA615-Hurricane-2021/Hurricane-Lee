@@ -32,6 +32,8 @@ buoyData <- function(input, name){
           panel.border = element_blank(),
           panel.grid = element_blank(),
           axis.line = element_line(colour = "black"))
+ 
+   # Add title for different plot
   if(name == "WSPD") {
     j <- pt + ggtitle("Wind Speed (WSPD)", subtitle = "Unit: m/s")
     return(j)
