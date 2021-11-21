@@ -18,6 +18,7 @@ source("bouy_plot.R")
 source("download_data.R")
 source("variogram_wind_precip.R")
 source("Visualization_Danny.R")
+source("spot_point_in_map.R")
 ```
 
 # Introduction
@@ -84,7 +85,15 @@ Based on the plots, we noticed the data we have for hurricane tracts cannot full
 
 
 ##  How the buoy data reflected the landfall of Hurricane Lee. 
-We picked buoy amr1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. The plots below demonstrate the density of  average wind per hour and average peak Gust Speed (reported every 6 minutes) per hour from September 2nd 00:00 till September 6th 18:00. 
+We picked buoy amr1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. 
+
+The map below identifies the buoy station we choose by a yellow point and the tracks of hurricanes with a blue line. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%'}
+plot_buoy_with_tracks()
+```
+
+The plots below demonstrate the density of  average wind per hour and average peak Gust Speed (reported every 6 minutes) per hour from September 2nd 00:00 till September 6th 18:00. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%'}
 plot1()
