@@ -28,15 +28,13 @@ The hurricane we chose was hurricane Lee, a.k.a, Tropical Storm Lee. It was the 
 # Hurricane Movement
 The hurricane data records every 6 hours for its movement. Hurricane Lee affected the following states: Louisiana, Mississippi, Alabama, Texas, New York, Pennsylvania, and Washington D.C Area. In addition, Lee caused historic flooding in Pennsylvania, New York. 
 \vspace{-0.5cm}
-
-# Explorary Data Analysis
-## Data Cleaning
 ```{r echo = F, fig.height=2.5, fig.align='center'}
 map_tracks(storms = "Lee-2011",
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-
+# Explorary Data Analysis
+## Data Cleaning
 The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and median of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).
 
 ```{r echo = FALSE, message=FALSE}
