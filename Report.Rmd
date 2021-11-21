@@ -2,8 +2,12 @@
 title: "Hurricane Lee Report"
 author: "Jinyu Li, Yuyang Li, Handing Zhang, Zening Ye"
 date: "11/17/2021"
-output: pdf_document
-header-includes: \usepackage{setspace}\doublespacing
+output: 
+  pdf_document: 
+    latex_engine: xelatex
+header-includes: 
+  - \usepackage{setspace}\renewcommand{\baselinestretch}{1.5}
+  - \setlength{\parindent}{2em}
 ---
 
 ```{r setup,include = FALSE}
@@ -28,34 +32,43 @@ map_tracks(storms = "Lee-2011",
 
 # Explorary Data Analysis
 ## Data Cleaning
-
 The data we used from the National Oceanic and Atmospheric Administration(NOAA) and “hurricaneexposure” and “hurricaneexposuredata” packages from Brooke Anderson. For buoy data, we downloaded the data from NOAA and did some simple cleaning. For instance, we combined the time data from the NOAA since it is not a formal time format (Table 1). Furthermore, we calculated the mean and median of the data by using every 6 hours and we deleted some useless data from the original dataset (Table 2).  
 
 For hurricane data, we first filtered the Lee’s data from the original dataset in several aspects, such as precipitation rate, model wind speed in each county and estimate wind speed in each county. Finally, we used inner join to combine datasets into one, this dataset was used for making variograms in the future. 
 
-According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into 3 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
+According to the data, we define 2011/09/04 18:00:00 as the landfall time of the hurricane and the buoy station, AMRL1, we chose is near the location of the landfall. Our analysis and visualization will focus but not limited on the period of time from 09/04 12:00 to 09/05 06:00 which we divided into three 6-hour periods and respectively represent the period before, during and after the landfall of Hurricane Lee.
 ```{r echo = F, message=FALSE}
 table1 <- buoyCbind() %>% rename(Year = "#YY") %>% rename(`Date/Time` = "DT" )
 kable(head(table1[c(1:4,241:244),]), caption = "Buoy Data in Every 6 Minutes", booktabs = T)
-table2 <- calculate_stat_per6h() %>% 
-  rename(m6h_WDIR = "WDIR_mid_6h") %>% 
-  rename(m6h_WSPD = "WSPD_mid_6h") %>%
-  rename(m6h_GST = "GST_mid_6h") %>% 
-  rename(m6h_PRES = "PRES_mid_6h") %>%
-  rename(m6h_ATMP = "ATMP_mid_6h") %>%
-  rename(m6h_WTMP = "WTMP_mid_6h")
+table2 <- calculate_stat_per6h() %>%
+  rename(WDIR6h = "WDIR_mid_6h") %>% 
+  rename(WSPD6h = "WSPD_mid_6h") %>%
+  rename(GST6h = "GST_mid_6h") %>% 
+  rename(PRES6h = "PRES_mid_6h") %>%
+  rename(ATMP6h = "ATMP_mid_6h") %>%
+  rename(WTMP6h = "WTMP_mid_6h")
 kable(table2[1:10,], caption = "Median Buoy Data in Every 6 Hours", booktabs = T) %>%
   kable_styling(latex_option = "striped")
-
-table3 <- data_join()
-table3_1 <- table3 %>% select(1:8)
-table3_2 <- table3 %>% select(3,9:13)
-kable(table3_1[1:10,], caption = "Joined hurricane col 1 to 8", booktabs = T) %>% 
-  kable_styling(latex_options = "striped")
-kable(table3_2[1:10,], caption = "Joined hurricane col 9 to 13", booktabs = T) %>%
-  kable_styling(latex_options = "striped")
 ```
 
+Since hurricane data are collected every 6 hours and buoy data are collected every 6 minutes in this case, and we want to combine the two data, we need to summarize buoy data by every 6 hours. After we full join the two data, our data are as follows in Table 3 and Table 4.
+```{r echo=FALSE, message=FALSE}
+table3 <- data_join()
+table3_1 <- table3 %>% select(1:8) %>% 
+  rename(WDIR6h = "WDIR_mid_6h") %>% 
+  rename(Date = "date")
+table3_2 <- table3 %>% select(3,9:13) %>% 
+  rename(Date = "date") %>% 
+  rename(WSPD6h = "WSPD_mid_6h") %>%
+  rename(GST6h = "GST_mid_6h") %>% 
+  rename(PRES6h = "PRES_mid_6h") %>%
+  rename(ATMP6h = "ATMP_mid_6h") %>%
+  rename(WTMP6h = "WTMP_mid_6h")
+kable(table3_1[1:10,], caption = "Joined hurricane col 1 to 8", booktabs = T)
+kable(table3_2[1:10,], caption = "Joined hurricane col 9 to 13", booktabs = T)
+```
+
+\newpage
 ## Precipitation in Difference Counties
 
 Since the main impact of the whole hurricane was the danger to personal property and life safety caused by its flooding, there is some correlation between the amount of precipitation and flooding. Therefore, our group started with the analysis of rainfall between different regions. The first two plots indicated different precipitation and flood events happened in different areas. The third plot which means the timeline for the wind speed (m/s) through the area. 
@@ -71,7 +84,6 @@ Based on the plots, we noticed the data we have for hurricane tracts cannot full
 
 
 ##  How the buoy data reflected the landfall of Hurricane Lee. 
-
 We picked buoy amr1, 29°26'58" N 91°20'17" W, which is relatively the closest to the landfall of the hurricane. The plots below demonstrate the density of  average wind per hour and average peak Gust Speed (reported every 6 minutes) per hour from September 2nd 00:00 till September 6th 18:00. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.height = '80%', out.width= '55%'}
@@ -112,10 +124,24 @@ varg_Plot("wind", 2)
 
 In these two figures, we can see the relationship between distance and variance clearly, it shows a positive correlation at first, then the variance reaches a peak and it decreases as the  distance becomes larger, which means that the difference between two counties with the increase of distance, it first increases and then decreases, and this pattern is the same either for precip or wind though the slope of two figures has slightly different.
 
+# Conclusion
+According to our analysis, we might answer the following questions:
+**A. Difference between buoy data and land-based data:**  
+a. Buoy data include more information about the weather but land-based data don’t;
+b. We assume the buoy data are collected at a fixed location while land-based data are collected in every relative county;
+c. Buoy data are data on the ocean, while the land-based data are data of the land；
+d. Buoy data are collected every 6 minutes, but hurricane data are collected every 6 hours.
+
+**B. Are two sets of data related and how? How do we know?**  
+According to the data, we can tell the 2 sets of data are related because there are some similar variables like wind speed and wind direction. Meanwhile, the location of the buoy is just at the landfall of the hurricane. Therefore, when the hurricane landed, the variables, eg. wind speed, in hurricane data are similar to the variables of wind speed in buoy data.
+
+**C. Large sets of data and Small sets of data**  
+With more buoy data, the hazards of the hurricane can be described with more details and stronger confidence, while small sets of data can also provide the precise information of the landfall and make the data wrangling process simpler. In this case, to simplify the part of processing data, we just used one buoy station data.
+
 # Reference
-*NOAA: https://www.ndbc.noaa.gov/view_text_file.php?filename=amrl1h2011.txt.gz&dir=data/historical/stdmet/*  
-*Tropical Storm Lee: https://en.wikipedia.org/wiki/Tropical_Storm_Lee_(2011)*  
-*Tropical Cyclone Report: https://www.nhc.noaa.gov/data/tcr/AL132011_Lee.pdf*  
+**NOAA:** *https://www.ndbc.noaa.gov/view_text_file.php?filename=amrl1h2011.txt.gz&dir=data/historical/stdmet/*  
+**Tropical Storm Lee:** *https://en.wikipedia.org/wiki/Tropical_Storm_Lee_(2011)*  
+**Tropical Cyclone Report:** *https://www.nhc.noaa.gov/data/tcr/AL132011_Lee.pdf*  
 
 
 \newpage
